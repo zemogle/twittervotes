@@ -6,19 +6,9 @@ import os
 from rq import Queue
 
 from worker import conn
+from utils import vote_parse
 
 BOTNAME = 'strictlyvote'
-TEAMS = ['tmp1' ,'tmp2']
-
-def vote_parse(user, text):
-    for team in TEAMS:
-        if text.find(team) != -1:
-            log = "One vote for {} from {}".format(team,user)
-            with open("test.txt", "a") as myfile:
-                myfile.write(log)
-            break
-            print(log)
-    return
 
 def find_number(text):
     numbers = [int(s) for s in text.split() if s.isdigit()]
