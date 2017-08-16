@@ -26,6 +26,7 @@ def find_number(text):
 
 def monitor(search_terms):
     read = False
+    q = Queue(connection=conn)
     api = TwitterAPI(
                 os.environ.get('BOT_CONSUMER_KEY', ''),
                 os.environ.get('BOT_CONSUMER_SECRET', ''),
