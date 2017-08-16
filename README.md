@@ -1,2 +1,2 @@
-# lcobot
-LCOGT twitter bot
+# StrictlyVote
+Strictly Come Dancing twitter voting bot
