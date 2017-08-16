@@ -2,3 +2,5 @@ oauthlib
 requests
 requests-oauthlib
 TwitterAPI
+rq
+redis
