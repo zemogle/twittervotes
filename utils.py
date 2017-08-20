@@ -9,22 +9,16 @@ def find_number(text):
     return numbers
 
 def vote_parse(user, text):
+    '''
+    Find what the score and to which team. Store it in Redis
+    '''
     for team in TEAMS:
         if text.find(team) != -1:
-            log = "One vote for {} from {}".format(team,user)
             scores = find_number(text)
             if scores:
                 score = int(scores[0])
-                store_value(team, score)
+                conn.incrby(team, score)
             break
-    return
-
-def store_value(team, score):
-    if team not in conn.keys():
-        conn.incr(team, score)
-    else:
-        conn.set(team, score)
-
     return
 
 def push_to_s3():
