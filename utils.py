@@ -1,5 +1,6 @@
 import tinys3, os
 import redis
+from worker import conn
 
 TEAMS = ['tmp1' ,'tmp2']
 
@@ -19,12 +20,10 @@ def vote_parse(user, text):
     return
 
 def store_value(team, score):
-    redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
-    redisdb = redis.from_url(redis_url)
-    if team not in redisdb.keys():
-        redisdb.incr(team, score)
+    if team not in conn.keys():
+        conn.incr(team, score)
     else:
-        redisdb.set(team, score)
+        conn.set(team, score)
 
     return
 
