@@ -10,10 +10,6 @@ from utils import vote_parse
 
 BOTNAME = 'strictlyvote'
 
-def find_number(text):
-    numbers = [int(s) for s in text.split() if s.isdigit()]
-    return numbers
-
 def monitor(search_terms):
     read = False
     q = Queue(connection=conn)
