@@ -5,3 +5,5 @@ TwitterAPI
 rq
 redis
 tinys3
+flask
+gunicorn

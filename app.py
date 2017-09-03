@@ -1,13 +1,14 @@
 import requests
 import json
 from TwitterAPI import TwitterAPI
-from datetime import datetime
+from flask import Flask
 import os
 from rq import Queue
 
 from worker import conn
-from utils import vote_parse
+from utils import vote_parse, scan_db
 
+app = Flask(__name__)
 BOTNAME = 'strictlyvote'
 
 def monitor(search_terms):
@@ -33,7 +34,10 @@ def strip_tag(text):
     new_text = text.strip()
     return ' '.join(new_text.split()).replace(' ','+')
 
+@app.route('/')
+def homepage():
+    return scan_db()
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
+    app.run(debug=True, use_reloader=True)
     monitor('')
