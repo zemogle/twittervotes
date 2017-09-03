@@ -3,12 +3,7 @@ import redis
 from worker import conn
 from datetime import datetime
 
-TEAMS = ['tmp1' ,'tmp2']
-WEEKS = ['20170923']
-
-def find_number(text):
-    numbers = [int(s) for s in text.split() if s.isdigit()]
-    return numbers
+BOTNAME = 'strictlyvote'
 
 def vote_parse(user, text):
     '''
@@ -28,12 +23,3 @@ def vote_parse(user, text):
                     conn.append(team_week_users, "{};".format(user))
             break
     return
-
-def scan_db():
-    the_time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
-    text = "<h1>{}</h1>".format(the_time)
-    for key in conn.keys("scd:*"):
-        line = conn.get(key)
-        text += "<p>{} | {}</p>".format(key,line)
-
-    return text

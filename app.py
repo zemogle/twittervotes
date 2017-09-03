@@ -1,30 +1,28 @@
 import requests
 import json
-from TwitterAPI import TwitterAPI
 from flask import Flask
 import os
 from rq import Queue
 
 from worker import conn
-from utils import vote_parse, scan_db
 
 app = Flask(__name__)
-BOTNAME = 'strictlyvote'
 
-def monitor(search_terms):
-    read = False
-    q = Queue(connection=conn)
-    api = TwitterAPI(
-                os.environ.get('BOT_CONSUMER_KEY', ''),
-                os.environ.get('BOT_CONSUMER_SECRET', ''),
-                os.environ.get('BOT_ACCESS_KEY', ''),
-                os.environ.get('BOT_ACCESS_SECRET', ''),
-            )
+TEAMS = ['tmp1' ,'tmp2']
+WEEKS = ['20170923']
 
-    openstream = api.request('statuses/filter', {'track': BOTNAME})
-    for item in openstream:
-        job = q.enqueue(vote_parse, item['user']['screen_name'], item['text'])
-    return
+def find_number(text):
+    numbers = [int(s) for s in text.split() if s.isdigit()]
+    return numbers
+
+def scan_db():
+    the_time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
+    text = "<h1>{}</h1>".format(the_time)
+    for key in conn.keys("scd:*"):
+        line = conn.get(key)
+        text += "<p>{} | {}</p>".format(key,line)
+
+    return text
 
 def strip_tag(text):
     if text.find('#'+BOTNAME) != -1:
@@ -40,4 +38,3 @@ def homepage():
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
-    monitor('')
