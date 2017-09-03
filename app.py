@@ -2,27 +2,30 @@ import requests
 import json
 from flask import Flask
 import os
-from rq import Queue
-
-from worker import conn
+import redis
+from datetime import datetime
 
 app = Flask(__name__)
+
+redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+
+rd = redis.from_url(redis_url)
 
 TEAMS = ['tmp1' ,'tmp2']
 WEEKS = ['20170923']
 
-def find_number(text):
-    numbers = [int(s) for s in text.split() if s.isdigit()]
-    return numbers
-
 def scan_db():
     the_time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
     text = "<h1>{}</h1>".format(the_time)
-    for key in conn.keys("scd:*"):
-        line = conn.get(key)
+    for key in rd.keys("scd:*"):
+        line = rd.get(key)
         text += "<p>{} | {}</p>".format(key,line)
 
     return text
+
+def find_number(text):
+    numbers = [int(s) for s in text.split() if s.isdigit()]
+    return numbers
 
 def strip_tag(text):
     if text.find('#'+BOTNAME) != -1:
@@ -31,6 +34,7 @@ def strip_tag(text):
         text = text.replace(BOTNAME,'')
     new_text = text.strip()
     return ' '.join(new_text.split()).replace(' ','+')
+
 
 @app.route('/')
 def homepage():

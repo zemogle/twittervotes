@@ -1,9 +1,32 @@
 import os
 import redis
-from worker import conn
 from datetime import datetime
+from rq import Queue
+from TwitterAPI import TwitterAPI
+
+#from worker import conn
 
 BOTNAME = 'strictlyvote'
+
+redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+
+conn = redis.from_url(redis_url)
+
+def monitor(search_terms):
+    read = False
+    q = Queue(connection=conn)
+    api = TwitterAPI(
+                os.environ.get('BOT_CONSUMER_KEY', ''),
+                os.environ.get('BOT_CONSUMER_SECRET', ''),
+                os.environ.get('BOT_ACCESS_KEY', ''),
+                os.environ.get('BOT_ACCESS_SECRET', ''),
+            )
+
+    openstream = api.request('statuses/filter', {'track': BOTNAME})
+    for item in openstream:
+        print("Found {} by {}".format(item['text'], item['user']['screen_name']))
+        job = q.enqueue(vote_parse, item['user']['screen_name'], item['text'])
+    return
 
 def vote_parse(user, text):
     '''
