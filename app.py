@@ -36,10 +36,4 @@ def strip_tag(text):
 
 
 if __name__ == "__main__":
-    # name = "M1"
-    # resp = fetch_image(name)
-    # if resp:
-    #     print resp
-    # else:
-    #     print "Couldn't find %s" % name
     monitor('')

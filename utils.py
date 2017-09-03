@@ -1,8 +1,9 @@
-import tinys3, os
+import os
 import redis
 from worker import conn
 
 TEAMS = ['tmp1' ,'tmp2']
+WEEKS = ['20170923']
 
 def find_number(text):
     numbers = [int(s) for s in text.split() if s.isdigit()]
@@ -12,18 +13,17 @@ def vote_parse(user, text):
     '''
     Find what the score and to which team. Store it in Redis
     '''
+    currentweek = WEEKS[0]
     for team in TEAMS:
         if text.find(team) != -1:
             scores = find_number(text)
+            team_week_score = "{}-{}-score".format(team,currentweek)
+            team_week_users = "{}-{}-users".format(team,currentweek)
             if scores:
-                score = int(scores[0])
-                conn.incrby(team, score)
+                users = conn.get(team_week_users)
+                if not users or user not in users:
+                    score = int(scores[0])
+                    conn.incrby(team_week_score, score)
+                    conn.append(team_week_users, "{};".format(user))
             break
-    return
-
-def push_to_s3():
-    conn = tinys3.Connection(os.environ['AWS_ACCESS_KEY_ID'],os.environ['AWS_SECRET_KEY'],tls=True)
-
-    f = open('test.txt','rb')
-    conn.upload('test.txt', f ,'darkmattersheep.uk/strictly/')
     return
