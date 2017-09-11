@@ -3,7 +3,6 @@ import os
 import redis
 from rq import Worker, Queue, Connection
 
-from utils import monitor
 
 listen = ['high', 'default', 'low']
 
@@ -13,7 +12,6 @@ conn = redis.from_url(redis_url)
 
 
 if __name__ == '__main__':
-    monitor('')
     with Connection(conn):
         worker = Worker(map(Queue, listen))
         worker.work()
