@@ -24,6 +24,7 @@ def strip_tag(text):
     return ' '.join(new_text.split()).replace(' ','+')
 
 def show_db_vals():
+    text = ''
     for key in conn.keys("scd:*"):
         line = conn.get(key)
         text += "{} | {}\n".format(key,line)
