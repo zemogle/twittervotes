@@ -58,8 +58,10 @@ def vote_parse(user, text):
             scores = find_number(text)
             team_week_score = "scd:{}-{}-score".format(team,currentweek)
             team_week_users = "scd:{}-{}-users".format(team,currentweek)
+            print(scores)
             if scores:
                 users = conn.get(team_week_users)
+                print(users)
                 if not users:# or user not in users:
                     score = int(scores[0])
                     conn.incrby(team_week_score, score)
