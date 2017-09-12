@@ -23,6 +23,13 @@ def strip_tag(text):
     new_text = text.strip()
     return ' '.join(new_text.split()).replace(' ','+')
 
+def show_db_vals():
+    for key in conn.keys("scd:*"):
+        line = conn.get(key)
+        text += "{} | {}\n".format(key,line)
+    print(text)
+    return
+    
 
 def monitor(search_terms):
     read = False
@@ -56,5 +63,6 @@ def vote_parse(user, text):
                     score = int(scores[0])
                     conn.incrby(team_week_score, score)
                     conn.append(team_week_users, "{};".format(user))
+                    show_db_vals()
             break
     return
