@@ -4,13 +4,13 @@ from datetime import datetime
 from rq import Queue
 from TwitterAPI import TwitterAPI
 
+from worker import conn
+
 #from worker import conn
 
 BOTNAME = 'strictlyvote'
 
-redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
 
-conn = redis.from_url(redis_url)
 
 def monitor(search_terms):
     read = False
