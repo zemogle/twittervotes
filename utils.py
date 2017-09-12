@@ -62,7 +62,7 @@ def vote_parse(user, text):
             if scores:
                 users = conn.get(team_week_users)
                 print(users)
-                if not users:# or user not in users:
+                if not users or user not in users or user == 'zemogle_dev':
                     score = int(scores[0])
                     conn.incrby(team_week_score, score)
                     conn.append(team_week_users, "{};".format(user))
