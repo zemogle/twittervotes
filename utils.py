@@ -6,10 +6,22 @@ from TwitterAPI import TwitterAPI
 
 from worker import conn
 
-#from worker import conn
 
 BOTNAME = 'strictlyvote'
+WEEKS = ['20170923']
+TEAMS = ['tmp1' ,'tmp2']
 
+def find_number(text):
+    numbers = [int(s) for s in text.split() if s.isdigit()]
+    return numbers
+
+def strip_tag(text):
+    if text.find('#'+BOTNAME) != -1:
+        text = text.replace('#'+BOTNAME,'')
+    elif text.find(BOTNAME) != -1:
+        text = text.replace(BOTNAME,'')
+    new_text = text.strip()
+    return ' '.join(new_text.split()).replace(' ','+')
 
 
 def monitor(search_terms):
