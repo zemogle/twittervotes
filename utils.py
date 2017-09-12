@@ -60,10 +60,10 @@ def vote_parse(user, text):
             team_week_users = "scd:{}-{}-users".format(team,currentweek)
             if scores:
                 users = conn.get(team_week_users)
-                if not users or user not in users:
+                if not users:# or user not in users:
                     score = int(scores[0])
                     conn.incrby(team_week_score, score)
                     conn.append(team_week_users, "{};".format(user))
-                    show_db_vals()
             break
+    show_db_vals()
     return
