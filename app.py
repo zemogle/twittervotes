@@ -19,6 +19,28 @@ def scan_db():
 
     return text
 
+@app.route("/results.json")
+def get_results():
+    
+    try:
+
+        # Initialize a employee list
+        teams = []
+
+        # create a instances for filling up employee list
+        for key in conn.keys("scd:*"):
+            teams = {
+               'score': conn.get(key),
+               'team': key}
+            teams.append(scores)
+    
+        # convert to json data
+        jsonStr = json.dumps(teams)
+
+    except Exception ,e:
+        print str(e)
+
+    return jsonify(scores=jsonStr, timestamp=datetime.now().isoformat())
 
 
 
